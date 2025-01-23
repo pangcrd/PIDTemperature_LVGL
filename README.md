@@ -1,7 +1,7 @@
 # 📚 DIY PID Temperature Controller Use LVGL + ESP32
 
 ## 🗯️ About this project
-- 🌟I'm using ESP32 38 PIN board.Change your board in [platformio.ini](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/platformio.ini) file
+- 🌟I'm using ESP32 38 PIN board.Change your board in [platformio.ini](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/platformio.ini) file.
 - 🌟Design UI on [Squareline Studio](https://squareline.io/)V1.5 
 - 🌟Change your SPI PIN in [User_Setup.h](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/lib/TFT_eSPI/User_Setup.h) file.
 - 🌟Using rotary encoder for control UI, How to change [Input device](https://docs.lvgl.io/9.1/overview/indev.html#indev-keys) <<Click

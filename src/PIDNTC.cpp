@@ -7,7 +7,7 @@
 //#define FAN 16
 
 // PID value tune by yourself.
-double Kp = 0.6, Ki= 0.5, Kd= 0.01;
+double Kp = 1.0, Ki= 0.8, Kd= 0.01;
 
 PID myPID(&Input, &Output, &setpoint, Kp, Ki, Kd, DIRECT);
 
@@ -47,7 +47,7 @@ void IRAM_ATTR handleButtonPress() {
 
 void StopHeat(){
     if (!PIDrun) {
-        analogWrite(23, 0);  
+        ledcWrite(0,0);
         lv_label_set_text(ui_Label6, "STOP");
         return;
     }

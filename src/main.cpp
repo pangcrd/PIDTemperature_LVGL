@@ -141,9 +141,8 @@ void buzzer(){
 void graph(lv_timer_t * timer){
 
         float NTCtemp = readNTCTemp(); 
-        Serial.println(NTCtemp);
+        //Serial.println(NTCtemp);
         
-
         /*Chart display*/
         lv_chart_set_next_value(ui_Chart1, ui_Chart1_series_1, NTCtemp);
         lv_chart_refresh(ui_Chart1); /*Refesh chart*/

@@ -1,19 +1,21 @@
-
 #include  "component.h"
 
-#define NTC_PIN 26
-#define BUTTON_PIN 35 
-#define pwmPin 23
-//#define FAN 16
+float kp = 1.3;
+float ki = 1.1;
+float kd = 0.02;
 
-// PID value tune by yourself.
-double Kp = 1.0, Ki= 0.8, Kd= 0.01;
-
-PID myPID(&Input, &Output, &setpoint, Kp, Ki, Kd, DIRECT);
-
-double setpoint = 50, Input, Output;
+float currentTemp = 0.0;
+float previousError = 0.0;
+float integral = 0.0;
+float output = 0.0;
 
 volatile bool PIDrun = true;
+
+float setpoint = 50.0;
+
+float elapsedTime, Time, timePrev;
+
+
 
 
 /*========== Read NTC thermistor ==========*/
@@ -26,40 +28,43 @@ volatile bool PIDrun = true;
     float temperature = 1 / (log(Res_NTC / 100000.0) / 3950.0 + 1 / (25.0 + 273.15)) - 273.15;// Measure NTC thermistor. GOOGLE IT!
 
     return temperature;
-   
+    //Serial.println("Current Temp: " + String(temperature));
 }
 /*========== Read NTC thermistor END ==========*/
 
-
 void PIDcontrol(){ 
+    // First we read the real value of temperature
+    currentTemp = readNTCTemp();
+    //Next we calculate the error between the setpoint and the real value
+    float error = setpoint - (currentTemp + 5);// "number" is setpoint value
+    //Calculate the P value
+    float proportional = 0.01*kp *error;
+    //Calculate the I value in a range on +-3
+    integral = 0.01*integral +(ki*error);
+    //For derivative we need real time to calculate speed change rate
+    timePrev = Time;
+    Time = millis();  
+    elapsedTime = (Time - timePrev) / 1000;   
+    float derivative = 0.01*kd*((error - previousError)/elapsedTime);
+    // calcula PWM from PID (Ut)
+    output = proportional + integral + derivative;
+    //Limit the PWM value from 0 to 255
+    if (output >= 255) output = 255; //PWM: 0-255
+    if (output <= 0) output = 0;
 
-  Input = readNTCTemp();
-  myPID.SetMode(AUTOMATIC);
-  myPID.Compute();
-  myPID.SetOutputLimits(0, 255);
-  ledcWrite(0,Output);
-  
-  
-}
+    ledcWrite(0, output);
+    previousError = error;
+
+    }
+
+
 void IRAM_ATTR handleButtonPress() {
     PIDrun = !PIDrun;  // Chuyển đổi trạng thái PIDrun
 }
-
 void StopHeat(){
     if (!PIDrun) {
-        ledcWrite(0,0);
+        ledcWrite(0,0); 
         lv_label_set_text(ui_Label6, "STOP");
         return;
     }
 }
-// void Cooling (){
-//     float currentTemp = readNTCTemp();
-//         if (currentTemp > setpoint + 2) {
-//             analogWrite(FAN, 255);
-//     } else if (currentTemp < setpoint + 1) {
-//             analogWrite(FAN, 128); 
-//     } else {
-//             analogWrite(FAN, 0);   
-//     }
-// }
-

@@ -10,7 +10,7 @@
 - 🌟You can integrate IOT into this small project so you can control it via the Internet. Take full advantage of the power of the ESP32.
 
 ## 🛠 How to use
-- ⚡PID value you can config in [PIDNTC.cpp](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/src/PIDNTC.cpp) at line 10.
+- ⚡PID value you can config in [PIDNTC.cpp](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/src/PIDNTC.cpp) at line 3.
 - ⚡Prevent over-shoot temperature with colling fan. Uncomment [void cooling()](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/src/PIDNTC.cpp) to use this function.
 - ⚡Set your setpoint value with UP and DOWN icon, click right side button to RUN.  
 ![UPDOWN](https://github.com/pangcrd/PIDTemperature_LVGL/blob/main/img/hdsd1.PNG)

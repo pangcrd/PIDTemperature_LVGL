@@ -159,59 +159,8 @@ void graph(lv_timer_t * timer){
 
 }
 /*========== for show graph END==========*/
-
-
-void setup ()
-{
-    Serial.begin( 115200 ); /* prepare for possible serial debug */
-
-    setBuzzerFlag = true;
-    analogReadResolution(12);
-
-    // String LVGL_Arduino = "Hello Arduino! ";
-    // LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
-
-    // Serial.println( LVGL_Arduino );
-    // Serial.println( "I am LVGL_Arduino" );
-    encoder.begin();
-
-    pinMode(25, OUTPUT);
-
-    pinMode(BUTTON_PIN, INPUT_PULLDOWN); 
-    attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), handleButtonPress, FALLING); 
-
-    lv_init();
-
-// #if LV_USE_LOG != 0
-//     lv_log_register_print_cb( my_print ); /* register print function for debugging */
-// #endif
-
-    tft.begin();          /* TFT init */
-    tft.setRotation( 1 ); /* Landscape orientation, flipped */
-
-    static lv_disp_t* disp;
-    disp = lv_display_create( screenWidth, screenHeight );
-    lv_display_set_buffers( disp, buf, NULL, SCREENBUFFER_SIZE_PIXELS * sizeof(lv_color_t), LV_DISPLAY_RENDER_MODE_PARTIAL );
-    lv_display_set_flush_cb( disp, my_disp_flush );
-
-
-    lv_tick_set_cb( my_tick_get_cb );
-
-    ui_init();
-    group_init();
-
-    lv_timer_t* timer = lv_timer_create(graph,1000,NULL); //Update sensor value after 2 second
-
-    Serial.println( "Setup done" );
-}
-
-
-
-void loop ()
-{   
-    buzzer();
-    StopHeat();
-    lv_obj_t *focused_obj = lv_group_get_focused(groups[current_screen]);
+void GUI_action(){
+     lv_obj_t *focused_obj = lv_group_get_focused(groups[current_screen]);
     // update group when switch screen
     lv_indev_set_group(encoder_indev, groups[current_screen]);
 
@@ -255,6 +204,60 @@ void loop ()
             }
         }
     }
+}
+
+void setup ()
+{
+    Serial.begin( 115200 ); /* prepare for possible serial debug */
+
+    setBuzzerFlag = true;
+    ledcSetup(0, 5000, 8);
+    ledcAttachPin(23,0);// xuất pwm ra chân 23 kênh 0
+
+    // String LVGL_Arduino = "Hello Arduino! ";
+    // LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
+
+    // Serial.println( LVGL_Arduino );
+    // Serial.println( "I am LVGL_Arduino" );
+    encoder.begin();
+
+    pinMode(25, OUTPUT);
+
+    pinMode(BUTTON_PIN, INPUT_PULLDOWN); 
+    attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), handleButtonPress, FALLING); 
+
+    lv_init();
+
+// #if LV_USE_LOG != 0
+//     lv_log_register_print_cb( my_print ); /* register print function for debugging */
+// #endif
+
+    tft.begin();          /* TFT init */
+    tft.setRotation( 1 ); /* Landscape orientation, flipped */
+
+    static lv_disp_t* disp;
+    disp = lv_display_create( screenWidth, screenHeight );
+    lv_display_set_buffers( disp, buf, NULL, SCREENBUFFER_SIZE_PIXELS * sizeof(lv_color_t), LV_DISPLAY_RENDER_MODE_PARTIAL );
+    lv_display_set_flush_cb( disp, my_disp_flush );
+
+
+    lv_tick_set_cb( my_tick_get_cb );
+
+    ui_init();
+    group_init();
+
+    lv_timer_t* timer = lv_timer_create(graph,1000,NULL); //Update sensor value after 2 second
+
+    Serial.println( "Setup done" );
+}
+
+
+
+void loop ()
+{   
+    GUI_action();
+    buzzer();
+    StopHeat();
     //Serial.println("PWM: " + String(Output));
     lv_timer_handler(); /* let the GUI do its work */
     delay(5);

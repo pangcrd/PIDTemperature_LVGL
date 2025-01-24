@@ -7,7 +7,7 @@
 //#define FAN 16
 
 // PID value tune by yourself.
-double Kp = 0.8, Ki= 0.95, Kd= 0.05;
+double Kp = 0.6, Ki= 0.5, Kd= 0.01;
 
 PID myPID(&Input, &Output, &setpoint, Kp, Ki, Kd, DIRECT);
 
@@ -37,7 +37,7 @@ void PIDcontrol(){
   myPID.SetMode(AUTOMATIC);
   myPID.Compute();
   myPID.SetOutputLimits(0, 255);
-  analogWrite(pwmPin, Output);
+  ledcWrite(0,Output);
   
   
 }

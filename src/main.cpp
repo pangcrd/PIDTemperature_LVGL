@@ -83,7 +83,7 @@ static uint32_t my_tick_get_cb (void) { return millis(); }
  void group_init(){
 
     //Initialize the Rotary Encoder input device. For LVGL version 9+ only
-    lv_indev_t *encoder_indev = lv_indev_create();
+    encoder_indev = lv_indev_create();
     lv_indev_set_type(encoder_indev, LV_INDEV_TYPE_ENCODER);
     lv_indev_set_read_cb(encoder_indev, my_encoder_read);
 
